@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block css %}
+<link href="{{ settings.MEDIA_URL }}css/jihua.min.css?1" rel="stylesheet">
+<link href="{{ settings.MEDIA_URL }}css/jquery-ui.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block js %}
+<script src="{{ settings.MEDIA_URL }}js/LAB.min.js"></script>
+<script>
+$LAB
+.script('{{ settings.MEDIA_URL }}js/underscore-min.js')
+.script('{{ settings.MEDIA_URL }}js/jquery.min.js').wait()
+.script('{{ settings.MEDIA_URL }}js/backbone-min.js')
+.script('{{ settings.MEDIA_URL }}js/bootstrap-dropdown.js')
+.script('{{ settings.MEDIA_URL }}js/bootstrap-buttons.js')
+.script('{{ settings.MEDIA_URL }}js/bootstrap-twipsy.js')
+.script('{{ settings.MEDIA_URL }}js/jquery-ui.min.js')
+.script('{{ settings.MEDIA_URL }}js/utils.js')
+.script('{{ settings.MEDIA_URL }}js/bootstrap-modal.js').wait()
+.script('{{ settings.MEDIA_URL }}js/jihua.min.js?1').wait(function(){
+	window.initTodos = JSON.parse(atob('{{ todos|safe }}'));
+	window.initActivities = JSON.parse(atob('{{ activities|safe }}'));
+	$(function(){
+		new window.Jihua;
+		Backbone.history.start();
+	});
+})
+</script>
+{% endblock %}
+
+{% block container %}
+	<div class="container" id="main">
+		<div class="row">
+			<div class="span8">
+				<ul class="tabs" id="left-tab">
+					<li><a href="#!/today">{% trans '今日' %}</a></li>
+					<li><a href="#!/yesterday">{% trans '昨日' %}</a></li>
+					<li><a href="#!/undone">{% trans '未完成' %}</a></li>
+					<li class="dropdown" data-dropdown="dropdown">
+						<a href="#!/history" class="dropdown-toggle">{% trans '历史' %}</a>
+						<ul class="dropdown-menu">
+							<li><a href="#!/this/week">{% trans '本周' %}</a></li>
+							<li><a href="#!/this/month">{% trans '本月' %}</a></li>
+							<li class="divider"></li>
+							<li><a href="#!/range">{% trans '某个时间段' %}</a></li>
+						</ul>
+					<li><a href="#!/tags">{% trans '标签' %}</a></li>
+				</ul>
+				<div class="todo-data">
+				</div>
+			</div>
+			<div class="span8">
+				<ul class="tabs" data-tabs="tabs">
+					<li class="active"><a href="#!/activity">{% trans '活动清单' %}</a></li>
+				</ul>
+			</div>
+			<div id="splash" class="loading"></div>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block css %}
+<link href="{{ settings.MEDIA_URL }}css/public.css" rel="stylesheet">
+{% endblock %}
+
+{% block js %}
+<script src="{{ settings.MEDIA_URL }}js/jquery.min.js" /></script>
+<script>
+$(function(){
+	$('.help-inline').each(function(){
+		$(this).prev().addClass('error').parent().parent().addClass('error');
+	});
+	var error = function(el, msg){
+		el.addClass('error');
+		if (!el.next().is('.help-inline'))
+			$('<span class="help-inline" />').text(msg).insertAfter(el);
+		else
+			el.next().text(msg);
+		el.parent().parent().addClass('error');
+		return false;
+	}, error_captcha = function(){
+		$('<span class="help-block">{% trans '验证码输入错误' %}</span>').insertAfter($('#recaptcha_widget_div'));
+		$('#recaptcha_widget_div').parent().parent().addClass('error');
+	};
+	$('#signup-form').submit(function(){
+		$('#signup-form .error').removeClass('error');
+		$('#signup-form .help-inline').remove();
+		var a = $('#username1').val(), b = $('#email').val(), c = $('#password1').val(), d = $('#password2').val(), e = $('#recaptcha_response_field').val();
+		if (!/^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/.test(b))
+			return error($('#email'), '{% trans 'Email 格式错误' %}');
+		if (c && c != d)
+			return error($('#password1'), '{% trans '两次输入的密码不一致' %}');
+		if (!$.trim(e))
+			return error_captcha();
+		return (a && b && c && d && e) ? true : false;
+	});
+	{% if not captcha_ok %}
+	error_captcha();
+	{% endif %}
+});
+</script>
+{% endblock %}
+
+{% block container %}
+<div class="container signup">
+	<div class="hero-unit row">
+		<div class="span14">
+			<form action="/signup/" method="post" id="signup-form">{% csrf_token %}
+				<fieldset>
+					<legend>{% trans '注册' %}</legend>
+					<div class="clearfix">
+						<label for="username1">{% trans '用户名' %}</label>
+						<div class="input">
+							<input class="xlarge" id="username1" name="username" value="{{ form.username.value|default_if_none:'' }}" size="30" type="text" autofocus="autofocus" required="required" />
+							{% if form.username.errors %}
+							<span class="help-inline">{{ form.username.errors.0 }}</span>
+							{% endif %}
+						</div>
+					</div>
+					<div class="clearfix">
+						<label for="email">{% trans '电子邮件' %}</label>
+						<div class="input">
+							<input class="xlarge" id="email" name="email" value="{{ form.email.value|default_if_none:'' }}" size="16" type="text" required="required" />
+							{% if form.email.errors %}
+							<span class="help-inline">{{ form.email.errors.0 }}</span>
+							{% endif %}
+						</div>
+					</div>
+					<div class="clearfix">
+						<label for="password1">{% trans '密码' %}</label>
+						<div class="input">
+							<input class="xlarge" id="password1" name="password1" type="password" size="30" type="text" required="required" />
+							{% if form.password1.errors %}
+							<span class="help-inline">{{ form.password1.errors.0 }}</span>
+							{% endif %}
+						</div>
+					</div>
+					<div class="clearfix">
+						<label for="password2">{% trans '确认密码' %}</label>
+						<div class="input">
+							<input class="xlarge" id="password2" name="password2" type="password" size="30" type="text" required="required" />
+							{% if form.password2.errors %}
+							<span class="help-inline">{{ form.password2.errors.0 }}</span>
+							{% endif %}
+						</div>
+					</div>
+					<div class="clearfix">
+						<label for="">{% trans '验证码' %}</label>
+						<div class="input">
+							<script src="https://www.google.com/recaptcha/api/challenge?k={{ settings.CAPTCHA_PUBLIC_KEY }}" /></script>
+						</div>
+					</div>
+					<div class="actions">
+						<input type="submit" class="btn primary" value="{% trans '注册' %}" />
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+{% endblock %}

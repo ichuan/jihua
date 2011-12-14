@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block css %}
+<link href="{{ settings.MEDIA_URL }}css/public.css" rel="stylesheet">
+{% endblock %}
+
+{% block js %}
+<script src="{{ settings.MEDIA_URL }}js/jquery.min.js" /></script>
+<script>
+$(function(){
+	$('.help-inline').each(function(){
+		$(this).prev().addClass('error').parent().parent().addClass('error');
+	});
+});
+</script>
+{% endblock %}
+
+{% block container %}
+<div class="container signup">
+	<div class="hero-unit row">
+		<div class="span14">
+			{% if not validlink %}
+			<div class="alert-message block-message error">
+				<p>{% trans '无效地址' %}</p>
+				<div class="alert-actions"><a class="btn small" href="/">{% trans '返回首页' %}</a></div>
+			</div>
+			{% else %}
+			<form action="." method="post" id="changepass-form">{% csrf_token %}
+				<fieldset>
+					<legend>{% trans '设置新密码' %}</legend>
+					<div class="clearfix">
+						<label for="new_password1">{% trans '新密码' %}</label>
+						<div class="input">
+							<input class="xlarge" id="new_password1" name="new_password1" type="password" size="30" type="text" required="required" autofocus="autofocus" />
+							{% if form.new_password1.errors %}
+							<span class="help-inline">{{ form.new_password1.errors.0 }}</span>
+							{% endif %}
+						</div>
+					</div>
+					<div class="clearfix">
+						<label for="new_password2">{% trans '确认新密码' %}</label>
+						<div class="input">
+							<input class="xlarge" id="new_password2" name="new_password2" type="password" size="30" type="text" required="required" />
+							{% if form.new_password2.errors %}
+							<span class="help-inline">{{ form.new_password2.errors.0 }}</span>
+							{% endif %}
+						</div>
+					</div>
+					<div class="actions">
+						<input type="submit" class="btn primary" value="{% trans '保存' %}" />
+					</div>
+				</fieldset>
+			</form>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

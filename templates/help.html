@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block js %}
+	{% if user.is_authenticated %}
+	<script src="{{ settings.MEDIA_URL }}js/jquery.min.js" /></script>
+	<script src="{{ settings.MEDIA_URL }}js/bootstrap-dropdown.js" /></script>
+	{% endif %}
+{% endblock %}
+
+{% block css %}
+<link href="{{ settings.MEDIA_URL }}css/public.css" rel="stylesheet">
+<style>.row{margin-bottom:10px;}</style>
+{% endblock %}
+
+{% block container %}
+<div class="container">
+	<div class="row">
+		<div class="span16">
+			<section id="about">
+				<h2>关于 计划.IN</h2>
+				<p>这是一个帮助你记录、管理日常计划的小工具。计划不易做得太长远，所以我们只专注于做最近几天的计划，尤其是今日计划。我们的目标是做一个简单好用的工作计划表。</p>
+				<p>这里有两个概念：<b>计划</b>和<b>活动</b>。计划指的是自己已经明确什么时间要去做或者即将开始做的事情，而活动指的是需要做、却暂时不清楚何时去做的事。举例来说，我今天的计划里有一条是写一个小程序，中午吃饭时忽然想起改天得找时间学习下 <code>awk</code>，于是可以把“学习 awk”列入你的活动列表。</p>
+			</section>
+		</div>
+	</div>
+	<div class="row">
+		<div class="span16">
+			<section id="todo">
+				<h2>今日计划</h2>
+				<p>“今日计划表”是这个工具最主要的部分。一日之计在于晨。每天起床后将今日要完成的工作列在“今日计划表”内，今日的目标就是将计划表内每一项都消灭掉！晚上的时候再回顾下今日完成的工作，总结经验，提高效率。</p>
+				<p>为什么是“今日计划”，而不是可以像 Google Calendar 那样为将来任何一天安排事情？《重来》里《计划即瞎猜》一文里说：<blockquote>现在就决定你这周要做什么，不必去管全年的计划。只要找出下一项最重要的任务，然后起而行之。在行动开始前的一刻作决定，而不是早早就预先定下某事</blockquote>我们更激进些，只做今日的计划。坚持做下去，你会发现自己的零碎时间都被利用了起来，完成了许许多多的工作；甚至人生也变得井井有条了。</p>
+			</section>
+		</div>
+	</div>
+	<div class="row">
+		<div class="span16">
+			<section id="activity">
+				<h2>活动清单</h2>
+				<p>如上所述，这里定义的活动是需要去做、但并不是今日必须去做的事情。如果你用过 Google Task，就会理解一点。当有一天你要做某个活动了，就把它移到今日计划表里吧。一项活动或计划不能在一天内完成怎么办？没关系，这说明你要把那件事再拆分，分解成数个可以在一天内完成的步骤或小任务。</p>
+				<p>你也可以把活动清单当作备忘录来用。我就是这么用的。</p>
+			</section>
+		</div>
+	</div>
+	<div class="row">
+		<div class="span16">
+			<section id="tools">
+				<h2>附加工具</h2>
+				<p>这里有一些分析、回顾、备份历史工作的工具（还在开发中）。一周结束后可以很方便地查看周报；可以检索历史数据；可以导出并下载你的所有数据。</p>
+			</section>
+		</div>
+	</div>
+	<div class="row">
+		<div class="span16">
+			<section id="faqs">
+				<h2>其他问题</h2>
+				<h4>如何添加标签？</h4>
+				<p>输入一项计划或者活动时，你可以像发微博那样添加标签，方法就是用井号(<code>#</code>)把标签包围起来，比如：<blockquote>晚上回家时取#钱#交房租</blockquote></p>
+				<p>善用标签可以把自己做过的事组织起来，方便检索。比如你可以把所有为 A 项目做过的开发工作贴上<code>A 项目</code>标签；把每天锻炼身体的日常活动标记为<code>锻炼</code>。</p>
+				<h4>快捷键？</h4>
+				<p>按 <code>t</code> 键可快速定位到输入今日计划的输入框；按 <code>y</code> 键可快速定位到输入活动的输入框中；按 <code>q</code> 则能定位到搜索框中。当光标定位在输入框中时，按 <code>ESC</code> 键可以跳出输入状态。</p>
+				<h4>还有什么？</h4>
+				<p>推荐使用 Google Chrome 浏览器。推荐阅读《<a href="http://www.pomodorotechnique.com/resources/ThePomodoroTechnique-CHN_v1-3.pdf" target="_blank">番茄工作法</a>》一书。</p>
+				<p>任何问题或建议，请给我发邮件：<img src="{{ settings.MEDIA_URL }}img/mail.gif" style="vertical-align:middle" /></p>
+			</section>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block css %}
+<link href="{{ settings.MEDIA_URL }}css/public.css" rel="stylesheet">
+{% endblock %}
+
+{% block js %}
+<script src="{{ settings.MEDIA_URL }}js/jquery.min.js" /></script>
+<script>
+$(function(){
+	$('.help-inline').each(function(){
+		$(this).prev().addClass('error').parent().parent().addClass('error');
+	});
+});
+</script>
+{% endblock %}
+
+{% block container %}
+<div class="container signup">
+	<div class="hero-unit row">
+		<div class="span14">
+			<form action="/reset_passwd/" method="post">{% csrf_token %}
+				<fieldset>
+					<legend>{% trans '重置密码' %}</legend>
+					<div class="clearfix">
+						<label for="email">{% trans '请输入邮件地址' %}</label>
+						<div class="input">
+							<input class="xlarge" id="email" name="email" value="{{ form.email.value|default_if_none:'' }}" size="30" type="text" autofocus="autofocus" required="required" />
+							{% if form.email.errors %}
+							<span class="help-inline">{{ form.email.errors.0 }}</span>
+							{% endif %}
+						</div>
+					</div>
+					<div class="actions">
+						<input type="submit" class="btn primary" value="{% trans '登录' %}" />
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+{% endblock %}

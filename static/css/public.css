@@ -1,0 +1,35 @@
+body {
+	padding-top:70px;
+}
+.topbar a.brand {
+	font-family: verdana;
+	text-shadow: white 0 0 2px;
+}
+.dot {
+	color: #C43C35;
+}
+.postfix {
+	color: #46A546;
+}
+.hero-unit {
+	background: #f5f5f5 url('../img/todo-preview.png') no-repeat right;
+}
+.signup .hero-unit {
+	background: #f5f5f5;
+}
+.container > footer {
+	margin-top:20px
+}
+.container > footer p {
+	text-align:center;
+	text-shadow:white 1px 1px 0;
+	color:gray;
+}
+.hero-unit .alert-message p{
+	font-size: 13px;
+	line-height: 18px;
+}
+.signup .hero-unit {
+	margin-bottom: 0;
+	padding: 30px 60px;
+}

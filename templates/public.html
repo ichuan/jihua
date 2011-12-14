@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block css %}
+<link href="{{ settings.MEDIA_URL }}css/public.css" rel="stylesheet">
+{% endblock %}
+
+{% block container %}
+<div class="container">
+	<div class="hero-unit">
+		<h1>{% trans '计划' %}<span class="dot">.</span><span class="postfix">IN</span></h1>
+		<p>{% trans '简单有效的工作计划表' %}</p>
+		<p><a class="btn primary large" href="/signup/">{% trans '立即注册' %} &raquo;</a></p>
+	</div>
+	<div class="row">
+		<div class="span6">
+			<h2>{% trans '今日计划' %}</h2>
+			<p>{% trans '一日之计在于晨。每天起床后将今日要完成的工作列在“今日计划表”内，今日的目标就是将计划表内每一项都消灭掉！' %}</p>
+			<p><a class="btn" href="/help/#todo">{% trans '查看详情' %} &raquo;</a></p>
+		</div>
+		<div class="span5">
+			<h2>{% trans '活动清单' %}</h2>
+			<p>{% trans '把那些偶然想起的、不能在今日内完成的事情都放入“活动清单”里，以后哪天想做了再列入当天的计划表内。' %}</p>
+			<p><a class="btn" href="/help/#activity">{% trans '查看详情' %} &raquo;</a></p>
+		</div>
+		<div class="span5">
+			<h2>{% trans '附加工具' %}</h2>
+			<p>{% trans '这里有一些分析、回顾、备份历史工作的工具。一周结束后可以很方便地查看周报；可以检索历史数据；可以导出并下载你的所有数据。' %}</p>
+			<p><a class="btn" href="/help/#tools">{% trans '查看详情' %} &raquo;</a></p>
+		</div>
+	</div>
+</div>
+{% endblock %}

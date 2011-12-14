@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block css %}
+<link href="{{ settings.MEDIA_URL }}css/public.css" rel="stylesheet">
+{% endblock %}
+
+{% block container %}
+<div class="container">
+	<div class="row">
+		<div class="alert-message block-message success">
+			<p>{{ msg }}</p>
+			<div class="alert-actions"><a class="btn small" href="/">{% trans '返回首页' %}</a></div>
+		</div>
+	</div>
+</div>
+{% endblock %}

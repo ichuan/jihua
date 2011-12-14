@@ -1,0 +1,14 @@
+{% load i18n %}{% load url from future %}{% autoescape off %}
+{% blocktrans %}您收到这封邮件是因为您在 JiHua.IN 选择了密码恢复功能。{% endblocktrans %}
+
+{% trans "请前往以下地址设置新密码" %}
+{% block reset_link %}
+{{ protocol }}://{{ domain }}{% url 'django.contrib.auth.views.password_reset_confirm' uidb36=uid token=token %}
+{% endblock %}
+{% trans "您的用户名是：" %} {{ user.username }}
+
+{% trans "感谢使用 JiHua.IN" %}
+
+{% blocktrans %}from yc{% endblocktrans %}
+
+{% endautoescape %}

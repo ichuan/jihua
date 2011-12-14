@@ -1,0 +1,23 @@
+body {
+	padding-top:70px;
+	background-color:#eee;
+	font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti !important;
+}
+.topbar a.brand {
+	font-family: verdana;
+	text-shadow: white 0 0 2px;
+}
+.hero-unit {
+	font-size: 13px;
+	background: #FEFEFE;
+	margin-bottom: 0;
+	padding: 30px 60px;
+}
+.container > footer {
+	margin-top:20px
+}
+.container > footer p {
+	text-align:center;
+	text-shadow:white 1px 1px 0;
+	color:gray;
+}

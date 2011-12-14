@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block css %}
+<link href="{{ settings.MEDIA_URL }}css/private.css" rel="stylesheet">
+{% endblock %}
+
+{% block js %}
+<script src="{{ settings.MEDIA_URL }}js/jquery.min.js" /></script>
+<script src="{{ settings.MEDIA_URL }}js/bootstrap-dropdown.js" /></script>
+<script>
+$(function(){
+	$('.help-inline').each(function(){
+		$(this).prev().addClass('error').parent().parent().addClass('error');
+	});
+});
+</script>
+{% endblock %}
+
+{% block container %}
+<div class="container">
+	<div class="hero-unit row">
+		<div class="span14">
+			{% if form.errors %}
+			<div class="alert-message error">
+				<p>{% trans '用户名或密码输入错误' %}</p>
+			</div>
+			{% endif %}
+			<form action="/change_passwd/" method="post" id="changepass-form">{% csrf_token %}
+				<fieldset>
+					<legend>{% trans '修改密码' %}</legend>
+					<div class="clearfix">
+						<label for="password1">{% trans '密码' %}</label>
+						<div class="input">
+							<input class="xlarge" id="password1" name="password" type="password" size="30" type="text" required="required" />
+							{% if form.password1.errors %}
+							<span class="help-inline">{{ form.password.errors.0 }}</span>
+							{% endif %}
+						</div>
+					</div>
+					<div class="clearfix">
+						<label for="password2">{% trans '密码' %}</label>
+						<div class="input">
+							<input class="xlarge" id="password1" name="password" type="password" size="30" type="text" required="required" />
+							{% if form.password1.errors %}
+							<span class="help-inline">{{ form.password.errors.0 }}</span>
+							{% endif %}
+						</div>
+					</div>
+					<div class="actions">
+						<input type="submit" class="btn primary" value="{% trans '登录' %}" />
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+{% endblock %}

@@ -9,6 +9,7 @@ from todo.models import Todo, Tag, User
 from utils import json_encode, json_decode, now, date_range
 
 PAGESIZE = 100
+re_tags = ur'(#|＃)([^\1]+)\1'
 
 def json_return(obj='', status=200):
 	'''
@@ -169,7 +170,7 @@ def _create_todo(content, user, catlog):
 	todo = manager.create(content=content, user=user, catlog=catlog)
 	existing_tagids = []
 	tags = []
-	for i in set(re.findall(r'#([^#]+)#', content)):
+	for i in set(i[1] for i in re.findall(re_tags, content)):
 		obj, created = Tag.objects.get_or_create(user=user, name=i)
 		tags.append(obj)
 		if not created:
@@ -182,8 +183,8 @@ def _create_todo(content, user, catlog):
 
 def _modify_todo(todo, content, user, done):
 	assert content
-	old_tags = set(re.findall(r'#([^#]+)#', todo.content))
-	new_tags = set(re.findall(r'#([^#]+)#', content))
+	old_tags = set(i[1] for i in re.findall(re_tags, todo.content))
+	new_tags = set(i[1] for i in re.findall(re_tags, content))
 
 	todo.content = content
 	todo.done = done

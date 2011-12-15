@@ -162,7 +162,7 @@
 			return text.replace(/&/g, '&amp;')
 					   .replace(/</g, '&lt;')
 					   .replace(/>/g, '&gt;')
-					   .replace(/#([^#]+)#/g, function(hash){
+					   .replace(/(#|＃)([^\1]+)\1/g, function(hash){
 				var t = hash.substr(1, hash.length - 2);
 				return '<span class="label ' + tagColorClass(t) + '">' + t + '</span>';
 			});
@@ -477,8 +477,6 @@
 		},
 		active: function(page){
 			this.$('.active').removeClass('active');
-			if (!/^\w+$/.test(page))
-				page = btoa(page);
 			var to_active = this.$('[href="#!/' + page + '"]');
 			if (to_active.length > 0)
 				to_active.parent('li').addClass('active');

@@ -19,7 +19,7 @@ $LAB
 .script('{{ settings.MEDIA_URL }}js/jquery-ui.min.js')
 .script('{{ settings.MEDIA_URL }}js/utils.js')
 .script('{{ settings.MEDIA_URL }}js/bootstrap-modal.js').wait()
-.script('{{ settings.MEDIA_URL }}js/jihua.min.js?1').wait(function(){
+.script('{{ settings.MEDIA_URL }}js/jihua.min.js?2').wait(function(){
 	window.initTodos = JSON.parse(atob('{{ todos|safe }}'));
 	window.initActivities = JSON.parse(atob('{{ activities|safe }}'));
 	$(function(){

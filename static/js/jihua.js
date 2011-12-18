@@ -162,7 +162,7 @@
 			return text.replace(/&/g, '&amp;')
 					   .replace(/</g, '&lt;')
 					   .replace(/>/g, '&gt;')
-					   .replace(/(#|＃)([^\1]+)\1/g, function(hash){
+					   .replace(/(#|＃)([^\1]+?)\1/g, function(hash){
 				var t = hash.substr(1, hash.length - 2);
 				return '<span class="label ' + tagColorClass(t) + '">' + t + '</span>';
 			});

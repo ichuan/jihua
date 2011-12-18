@@ -9,7 +9,7 @@ from todo.models import Todo, Tag, User
 from utils import json_encode, json_decode, now, date_range
 
 PAGESIZE = 100
-re_tags = ur'(#|＃)([^\1]+)\1'
+re_tags = ur'(#|＃)([^\1]+?)\1'
 
 def json_return(obj='', status=200):
 	'''

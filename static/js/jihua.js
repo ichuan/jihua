@@ -799,7 +799,7 @@
 					modal.find('.ok').trigger('click');
 					return false;
 				}
-				if ('INPUT,TEXTAREA'.indexOf(el.tagName) != -1 || modal.length > 0)
+				if ('INPUT,TEXTAREA'.indexOf(el.tagName) != -1 || modal.length > 0 || e.ctrlKey || e.shiftKey || e.altKey)
 					return;
 				switch (e.keyCode) {
 					case 84: // t

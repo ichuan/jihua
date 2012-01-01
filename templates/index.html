@@ -2,13 +2,25 @@
 {% load i18n %}
 
 {% block css %}
-<link href="{{ settings.MEDIA_URL }}css/jihua.min.css?1" rel="stylesheet">
+<link href="{{ settings.MEDIA_URL }}css/jihua.min.css?20120102" rel="stylesheet">
 <link href="{{ settings.MEDIA_URL }}css/jquery-ui.min.css" rel="stylesheet">
 {% endblock %}
 
 {% block js %}
 <script src="{{ settings.MEDIA_URL }}js/LAB.min.js"></script>
 <script>
+// time sync between server & browser
+!function(){
+	var i = new Date({{ now }}), add = i - new Date;
+	window.now = function(){
+		var j = new Date;
+		return new Date(j.getTime() + add);
+	};
+	window.todayts = function(){
+		var x = now();
+		return new Date(x.getFullYear(), x.getMonth(), x.getDate());
+	};
+}();
 $LAB
 .script('{{ settings.MEDIA_URL }}js/underscore-min.js')
 .script('{{ settings.MEDIA_URL }}js/jquery.min.js').wait()
@@ -19,7 +31,7 @@ $LAB
 .script('{{ settings.MEDIA_URL }}js/jquery-ui.min.js')
 .script('{{ settings.MEDIA_URL }}js/utils.js')
 .script('{{ settings.MEDIA_URL }}js/bootstrap-modal.js').wait()
-.script('{{ settings.MEDIA_URL }}js/jihua.min.js?3').wait(function(){
+.script('{{ settings.MEDIA_URL }}js/jihua.min.js?20120102').wait(function(){
 	window.initTodos = JSON.parse(atob('{{ todos|safe }}'));
 	window.initActivities = JSON.parse(atob('{{ activities|safe }}'));
 	$(function(){

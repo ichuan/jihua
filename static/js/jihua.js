@@ -5,8 +5,8 @@
 	var API_ROOT = '/api',
 		E = {},
 		tpls = {
-			activity: '<ul class="op"><li class="dropdown" data-dropdown="dropdown"><a title="操作" href="#" class="dropdown-toggle"></a><ul class="dropdown-menu"><li><a class="edit" href="#">修改</a></li><li><a class="del" href="#">删除</a></li><li><a class="a2t" href="#">放入今日计划</a></li></ul></ul><div class="activity"><%= content %></div>',
-			todo: '<ul class="op"><li class="dropdown" data-dropdown="dropdown"><a title="操作" href="#" class="dropdown-toggle"></a><ul class="dropdown-menu"><li><a class="edit" href="#">修改</a></li><li><a class="del" href="#">删除</a></li><li><a class="t2a" href="#">放回活动清单</a></li></ul></ul><div class="checkbox">&#x2713;</div><div class="todo"><%= content %></div>',
+			activity: '<div class="op"><div class="arrow"></div><div title="编辑" class="edit"></div><div title="删除" class="del"></div><div title="放入今日计划" class="a2t"></div><div title="添加于 <%= created %>" class="timestamp" data-timestamp="<%= timestamp %>"></div></div><div class="activity"><%= content %></div>',
+			todo: '<div class="op"><div class="arrow"></div><div title="编辑" class="edit"></div><div title="删除" class="del"></div><div title="放回活动清单" class="t2a"></div><div title="添加于 <%= created %>" class="timestamp" data-timestamp="<%= timestamp %>"></div></div><div class="checkbox">&#x2713;</div><div class="todo"><%= content %></div>',
 			today: '<div class="clearfix"><input class="span-new" id="new-todo" placeholder="输入计划，回车保存"><button id="submit-todo" data-loading-text="添加中..." class="btn primary">添加</button></div><ul class="todos"></ul>',
 			activities: '<div class="clearfix"><input class="span-new" id="new-activity" placeholder="输入活动，回车保存"><button id="submit-activity" data-loading-text="添加中..." class="btn primary">添加</button></div><ul class="activities"></ul>',
 			tab_item: '<li><a class="plus" href="#!/<%- name %>">搜索结果</a></li>',
@@ -18,13 +18,50 @@
 			var ret = 0;
 			for (var i = 0, j = tag.length; i < j; i++)
 				ret += tag.charCodeAt(i);
-			return 'cl' + (ret % 15);
+			return 'cl' + (ret % 30);
 		},
 		gotoPage = function(page){
 			page && (page = '!/' + page);
 			Backbone.history.navigate(page, true)
 		},
 		PAGESIZE = 100;
+
+	// parse string like: 2011-11-11 22:11:22
+	Date.fromString = function(date_str){
+		var res = /(\d+)-(\d+)-(\d+) (\d+):(\d+):(\d+)/.exec(date_str);
+		if (!res)
+			return false;
+		var year = parseInt(res[1], 10),
+			month = parseInt(res[2], 10) - 1,
+			day = parseInt(res[3], 10),
+			hour = parseInt(res[4], 10),
+			minute = parseInt(res[5], 10),
+			second = parseInt(res[6], 10);
+		return new Date(year, month, day, hour, minute, second);
+	};
+
+	window.humanizeDate = function(d2){
+		var d1 = now(), d2 = Date.fromString(d2), sep = (d1 - d2) / 1000, tts = todayts(), days = parseInt((tts - d2) / 86400000, 10);
+		if (d2 >= tts){
+			if (sep > 3600)
+				return '' + parseInt(sep / 3600, 10) + ' 小时前';
+			else if (sep > 1800)
+				return '半小时前';
+			else if (sep > 60)
+				return '' + parseInt(sep / 60, 10) + ' 分钟前';
+			else
+				return '刚刚';
+		} else if (days >= 0 && days < 7) {
+			if (days == 0)
+				return '昨天 ' + d2.getHours() + ':' + d2.getMinutes();
+			else if (days == 1)
+				return '前天 ' + d2.getHours() + ':' + d2.getMinutes();
+			else
+				return '' + (days + 1) + ' 天前';
+		} else{
+			return d2.getFullYear() + '/' + (d2.getMonth() + 1) + '/' + d2.getDate() + ' ' + d2.getHours() + ':' + d2.getMinutes() + ':' + d2.getSeconds();
+		}
+	};
 
 	_.extend(E, Backbone.Events);
 
@@ -89,6 +126,7 @@
 		template: _.template(tpls.activity),
 		events: {
 			'hover': 'hover',
+			'hover .op': 'hoverOp',
 			'click .edit': 'edit',
 			'click .del': 'del',
 			'click .a2t': 'convert',
@@ -102,10 +140,13 @@
 			this.render();
 		},
 		hover: function(event){
-			var el = $(this.el);
-			el[event.type == 'mouseenter' ? 'addClass' : 'removeClass']('hover');
-			if (!el.hasClass('hover'))
-				el.find('.op > li').removeClass('open');
+			var el = $(this.el), func = event.type == 'mouseenter' ? 'addClass' : 'removeClass';
+			el[func]('hover');
+			$('.selected').removeClass('selected');
+		},
+		hoverOp: function(event){
+			var el = $(this.el).find('.op'), func = event.type == 'mouseenter' ? 'addClass' : 'removeClass';
+			el[func]('hover');
 		},
 		edit: function(){
 			var model = this.model, popup = new EditModalView;
@@ -168,7 +209,11 @@
 			});
 		},
 		render: function(){
-			$(this.el).html(this.template({content: this.htmlContent()}));
+			$(this.el).html(this.template({
+				created: humanizeDate(this.model.get('created')),
+				timestamp: this.model.get('created'),
+				content: this.htmlContent()
+			})).find('.op [title]').twipsy({animate: false});
 			return this;
 		}
 	});
@@ -177,6 +222,7 @@
 		template: _.template(tpls.todo),
 		events: {
 			'hover': 'hover',
+			'hover .op': 'hoverOp',
 			'click .edit': 'edit',
 			'click .del': 'del',
 			'click .t2a': 'convert',
@@ -197,7 +243,11 @@
 		},
 		render: function(){
 			var el = $(this.el)[this.model.get('done') ? 'addClass' : 'removeClass']('done');
-			el.html(this.template({content: this.htmlContent()}));
+			el.html(this.template({
+				created: humanizeDate(this.model.get('created')),
+				timestamp: this.model.get('created'),
+				content: this.htmlContent()
+			})).find('.op [title]').twipsy({animate: false});
 			return this;
 		}
 	});
@@ -496,8 +546,7 @@
 		template: _.template(tpls.modal),
 		events: {
 			'click .cancel': 'hide',
-			'click .ok': 'ok',
-			'keydown input': 'testReturn'
+			'click .ok': 'ok'
 		},
 		btn1_class: 'primary',
 		btn2_class: 'secondary',
@@ -598,7 +647,7 @@
 		className: 'label',
 		initialize: function(){
 			var name = this.model.get('name'), counts = this.model.get('counts');
-			$(this.el).text(name).attr('title', counts + ' ' + '条记录').addClass(tagColorClass(name)).twipsy();
+			$(this.el).text(name).attr('title', counts + ' ' + '条记录').addClass(tagColorClass(name)).twipsy({animate: false});
 		}
 	});
 
@@ -706,6 +755,14 @@
 				showMonthAfterYear: true,
 				yearSuffix: '年'
 			});
+			// auto refresh timestamp every minute
+			setInterval(function(){
+				$('.timestamp').each(function(){
+					var el = $(this), ts = el.data('timestamp');
+					if (ts)
+						el.attr('data-original-title', '添加于 ' + humanizeDate(ts));
+				});
+			}, 60000);
 		},
 		autoNextPage: function(){
 			var app = this;
@@ -725,18 +782,66 @@
 			return this;
 		},
 		hotkeys: function(){
+			var focusMap = {
+				84: '#new-todo',
+				89: '#new-activity',
+				81: '#search'
+			}, triggerMap = {
+				69: '.edit',
+				68: '.del',
+				39: '.t2a',
+				37: '.a2t',
+				13: '.checkbox'
+			};
 			$(window).keydown(function(e){
-				var el = e.target;
-				if ('INPUT,TEXTAREA'.indexOf(el.tagName) != -1)
+				var el = e.target, modal = $('.modal');
+				if (modal.length > 0 && e.keyCode == 13){ // return
+					modal.find('.ok').trigger('click');
+					return false;
+				}
+				if ('INPUT,TEXTAREA'.indexOf(el.tagName) != -1 || modal.length > 0)
 					return;
-				if (e.keyCode == 84) // t
-					$('#new-todo').focus();
-				else if (e.keyCode == 89) // y
-					$('#new-activity').focus();
-				else if (e.keyCode == 81)
-					$('#search').focus();
-				else
-					return
+				switch (e.keyCode) {
+					case 84: // t
+					case 89: // y
+					case 81: // q
+						$(focusMap[e.keyCode]).focus();
+						break;
+					case 74: // j
+					case 75: // k
+					case 72: // h
+					case 76: // l
+						var cur = $('.selected'), key = e.keyCode, isRight = cur.parent().is('.activities');
+						if (key == 74 || key == 75)
+							next = cur[key == 74 ? 'next' : 'prev']();
+						else {
+							if ((isRight && key == 76) || (!isRight && key == 72))
+								return;
+							next = $(key == 72 ? '.todos li:eq(0)' : '.activities li:eq(0)');
+						}
+						if (cur.length == 0)
+							$('.todos > li,.activities > li').eq(0).addClass('selected');
+						else if (next.length != 0) {
+							next.addClass('selected');
+							cur.removeClass('selected');
+						}
+						break;
+					case 27: // esc
+						$('.selected').removeClass('selected');
+						break;
+					case 69: // e
+					case 68: // d
+					case 39: // e
+					case 37: // d
+					case 13: // return
+						var cur = $('.selected');
+						if (cur.hasClass('moving'))
+							return;
+						$(triggerMap[e.keyCode], cur).trigger('click');
+						break;
+					default:
+						return;
+				}
 				return false;
 			});
 			return this;

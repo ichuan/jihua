@@ -72,6 +72,7 @@ class Todo(models.Model):
 			'content': self.content,
 			'done': self.done,
 			'catlog': self.catlog,
+			'created': self.created,
 		}
 
 	class Meta:

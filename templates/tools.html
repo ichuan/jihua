@@ -18,7 +18,7 @@ $LAB
 			var ret = 0;
 			for (var i = 0, j = tag.length; i < j; i++)
 				ret += tag.charCodeAt(i);
-			return 'cl' + (ret % 15);
+			return 'cl' + (ret % 30);
 		}, htmlContent = function(text){
 			return text.replace(/&/g, '&amp;')
 					   .replace(/</g, '&lt;')

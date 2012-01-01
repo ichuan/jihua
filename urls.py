@@ -13,6 +13,7 @@ urlpatterns = patterns('',
     (r'^signin/$', 'django.contrib.auth.views.login', {'template_name': 'signin.html'}),
     (r'^signout/$', 'jihua.views.signout'),
     (r'^help/$', 'django.views.generic.simple.direct_to_template', {'template': 'help.html'}),
+    (r'^changelog/$', 'django.views.generic.simple.direct_to_template', {'template': 'changelog.html'}),
     (r'^tools/$', 'jihua.views.tools'),
     (r'^change_passwd/$', 'django.contrib.auth.views.password_change', {
 		'template_name': 'change_passwd.html',

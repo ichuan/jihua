@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import base64
+import base64, time
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.conf import settings
 from django.template import RequestContext
@@ -30,6 +30,7 @@ def index(req):
 	activities = api.activities(user=req.user)
 
 	return render_to_response('index.html', {
+		'now': int(time.time() * 1000),
 		'search': True,
 		'todos': base64.b64encode(json_encode(todos)),
 		'activities': base64.b64encode(json_encode(activities)),

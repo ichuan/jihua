@@ -2,9 +2,11 @@
 {% load i18n %}
 
 {% block css %}
-<link href="{{ settings.MEDIA_URL }}css/jihua.min.css?20120102" rel="stylesheet">
+<link href="{{ settings.MEDIA_URL }}css/jihua.min.css?201201021" rel="stylesheet">
 <link href="{{ settings.MEDIA_URL }}css/jquery-ui.min.css" rel="stylesheet">
 {% endblock %}
+
+{% block index-menu %}active{% endblock %}
 
 {% block js %}
 <script src="{{ settings.MEDIA_URL }}js/LAB.min.js"></script>
@@ -31,7 +33,7 @@ $LAB
 .script('{{ settings.MEDIA_URL }}js/jquery-ui.min.js')
 .script('{{ settings.MEDIA_URL }}js/utils.js')
 .script('{{ settings.MEDIA_URL }}js/bootstrap-modal.js').wait()
-.script('{{ settings.MEDIA_URL }}js/jihua.min.js?201201021').wait(function(){
+.script('{{ settings.MEDIA_URL }}js/jihua.min.js?201201022').wait(function(){
 	window.initTodos = JSON.parse(atob('{{ todos|safe }}'));
 	window.initActivities = JSON.parse(atob('{{ activities|safe }}'));
 	$(function(){
@@ -54,6 +56,7 @@ $LAB
 						<a href="#!/history" class="dropdown-toggle">{% trans '历史' %}</a>
 						<ul class="dropdown-menu">
 							<li><a href="#!/this/week">{% trans '本周' %}</a></li>
+							<li><a href="#!/last/week">{% trans '上周' %}</a></li>
 							<li><a href="#!/this/month">{% trans '本月' %}</a></li>
 							<li class="divider"></li>
 							<li><a href="#!/range">{% trans '某个时间段' %}</a></li>

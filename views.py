@@ -68,18 +68,35 @@ def signout(req):
 
 @login_required
 def tools(req):
-	dates = date_range('week')
-	todos = Todo.todos.filter(created__range=dates, user=req.user, done=True)
+	return render_to_response('tools.html', {
+	}, context_instance=RequestContext(req))
+
+@login_required
+def report(req):
+	'''周报'''
+	return render_to_response('report.html', {
+		'cur': _report(date_range('week'), req.user),
+		'last': _report(date_range('lastweek'), req.user),
+	}, context_instance=RequestContext(req))
+
+weekdays = [_(u'周一'), _(u'周二'), _(u'周三'), _(u'周四'), _(u'周五'), _(u'周六'), _(u'周日')]
+def _report(dates, user):
+	todos = Todo.todos.filter(created__range=dates, user=user)
+	dones = todos.filter(done=True)
 	ret = OrderedDict()
-	weekdays = [_(u'周一'), _(u'周二'), _(u'周三'), _(u'周四'), _(u'周五'), _(u'周六'), _(u'周日')]
-	for i in sorted(todos, key=lambda i:i.created):
+	counter = 0
+	for i in sorted(dones, key=lambda i:i.created):
+		counter += 1
 		key = weekdays[i.created.weekday()]
 		if not key in ret:
 			ret[key] = []
 		ret[key].append(i)
-	mon, sun = week_boundary(now())
+	ranges = '%s ~ %s' % (dates[0].split()[0].replace('-', '/'), dates[1].split()[0].replace('-', '/'))
+	total = todos.count()
+	rate = 0 if total == 0 else int(counter * 100.0 / total)
 
-	return render_to_response('tools.html', {
+	return {
 		'todos': ret,
-		'ranges': '%s ~ %s' % (str(mon.date()).replace('-', '/'), str(sun.date()).replace('-', '/')),
-	}, context_instance=RequestContext(req))
+		'ranges': ranges,
+		'rate': rate,
+	}

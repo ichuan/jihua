@@ -707,6 +707,7 @@
 			'!/tag/*tag': 'tag',
 			'!/search/*query': 'search',
 			'!/this/:unit': 'range',
+			'!/last/week': 'lastweek',
 			'!/range/:from/:to': 'range'
 		},
 		initialize: function(initTodos, initActivities){
@@ -881,11 +882,14 @@
 				title: '包含 "' + query + '" 的计划条目' 
 			});
 		},
+		lastweek: function(){
+			this.range('lastweek');
+		},
 		range: function(r1, r2){
 			var date = /\d{4}-\d{2}-\d{2}/;
-			if (r2 === undefined && 'week,month'.indexOf(r1) != -1){
+			if (r2 === undefined && 'week,month,lastweek'.indexOf(r1) != -1){
 				range = r1;
-				title = (r1 == 'week' ? '本周' : '本月') + '的计划';
+				title = (r1 == 'week' ? '本周' : (r1 == 'month' ? '本月' : '上周')) + '的计划';
 			} else if (date.test(r1) && date.test(r2)){
 				range = r1 + ',' + r2;
 				title = (r1 + ' ~ ' + r2 + ' 的计划').replace(/-/g, '/');

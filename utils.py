@@ -17,7 +17,7 @@ class MyJSONEncoder(JSONEncoder):
 
 def date_range(s):
 	'''从字串计算出时间范围，返回两个类似 '2011-10-10 11:22:33' 的字串'''
-	if s in ('today', 'yesterday', 'week', 'month'):
+	if s in ('today', 'yesterday', 'week', 'lastweek', 'month'):
 		n = now()
 		if s == 'today':
 			start = end = str(n.date())
@@ -25,7 +25,10 @@ def date_range(s):
 			start = end = str((n - timedelta(days=1)).date())
 		elif s == 'week':
 			start = str((n - timedelta(days=n.weekday() - 0)).date())
-			end = str(n.date())
+			end = str((n + timedelta(days=6 - n.weekday())).date())
+		elif s == 'lastweek':
+			start = str((n - timedelta(days=n.weekday() + 7)).date())
+			end = str((n - timedelta(days=n.weekday() + 1)).date())
 		elif s == 'month':
 			start = '%s-%s-01' % (n.year, n.month)
 			end = str(n.date())
@@ -40,11 +43,6 @@ def date_range(s):
 
 def plus_time(i, j):
 	return (i + ' 00:00:00', j + ' 23:59:59')
-
-def week_boundary(date):
-	monday = date - timedelta(days=date.weekday() - 0)
-	sunday = monday + timedelta(days=6)
-	return monday, sunday
 
 json_encode = lambda i:dumps(i, cls=MyJSONEncoder)
 json_decode = lambda i:loads(i)

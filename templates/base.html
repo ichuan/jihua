@@ -31,10 +31,15 @@
 				<div class="container">
 					<a class="brand" href="/">{% trans '计划.IN' %}</a>
 					{% if user.is_authenticated %}
+					<ul class="nav">
+						<li class="index {% block index-menu %}{% endblock %}"><a href="/">{% trans '首页' %}</a></li>
+						<li class="report {% block report-menu %}{% endblock %}"><a href="/report/">{% trans '周报' %}</a></li>
+						<li class="tools {% block tools-menu %}{% endblock %}"><a href="/tools/">{% trans '小工具' %}</a></li>
+					</ul>
 						{% if search %}
-					<form class="pull-left" action="">
-						<input type="search" id="search" placeholder="{% trans '搜索' %}" />
-					</form>
+						<form action="">
+							<input type="search" id="search" placeholder="{% trans '搜索' %}" />
+						</form>
 						{% endif %}
 					<ul class="nav secondary-nav">
 						<li class="dropdown" data-dropdown="dropdown">
@@ -42,7 +47,6 @@
 							<ul class="dropdown-menu">
 								<!--li><a href="/settings/">{% trans '偏好设置' %}</a></li-->
 								<li><a href="/change_passwd/">{% trans '修改密码' %}</a></li>
-								<li><a href="/tools/">{% trans '小工具' %}</a></li>
 								<li><a href="/help/">{% trans '帮助' %}</a></li>
 								<li class="divider"></li>
 								<li><a href="/signout/">{% trans '退出' %}</a></li>

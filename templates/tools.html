@@ -5,6 +5,8 @@
 <link href="{{ settings.MEDIA_URL }}css/jihua.min.css?1" rel="stylesheet">
 {% endblock %}
 
+{% block tools-menu %}active{% endblock %}
+
 {% block js %}
 <script src="{{ settings.MEDIA_URL }}js/LAB.min.js"></script>
 <script>
@@ -14,24 +16,6 @@ $LAB
 .script('{{ settings.MEDIA_URL }}js/bootstrap-tabs.js')
 .script('{{ settings.MEDIA_URL }}js/bootstrap-buttons.js').wait(function(){
 	$(function(){
-		var tagColorClass = function(tag){
-			var ret = 0;
-			for (var i = 0, j = tag.length; i < j; i++)
-				ret += tag.charCodeAt(i);
-			return 'cl' + (ret % 30);
-		}, htmlContent = function(text){
-			return text.replace(/&/g, '&amp;')
-					   .replace(/</g, '&lt;')
-					   .replace(/>/g, '&gt;')
-					   .replace(/(#|＃)([^\1]+?)\1/g, function(hash){
-				var t = hash.substr(1, hash.length - 2);
-				return '<span class="label ' + tagColorClass(t) + '">' + t + '</span>';
-			});
-		};
-		$('#report li').each(function(){
-			var el = $(this), text = el.text();
-			el.html(htmlContent(text));
-		});
 	});
 })
 </script>
@@ -42,31 +26,9 @@ $LAB
 		<div class="row">
 			<div class="span16">
 				<ul class="pills" data-pills="pills">
-					<li class="active"><a href="#report">{% trans '周报' %}</a></li>
-					<li><a href="#export">{% trans '数据导出' %}</a></li>
+					<li class="active"><a href="#export">{% trans '数据导出' %}</a></li>
 				</ul>
-				<div id="report" class="todo-data hide active">
-					<div class="page-header">
-						<h1>{% trans '周报' %}<small>{{ ranges }}</small></h1>
-					</div>
-					<div class="row">
-						<div class="span15">
-							<dl>
-								{% for i, j in todos.items %}
-								<dt>{{ i }}</dt>
-								<dd>
-									<ol>
-										{% for k in j %}
-										<li>{{ k }}</li>
-										{% endfor %}
-									</ol>
-								</dd>
-								{% endfor %}
-							</dl>
-						</div>
-					</div>
-				</div>
-				<div id="export" class="todo-data hide">
+				<div id="export" class="todo-data">
 					Coming soon...
 				</div>
 			</div>

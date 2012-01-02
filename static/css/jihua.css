@@ -374,27 +374,27 @@ color patterns from http://911.im/W
 	-moz-box-shadow: 0 0 6px #f8b9b7;
 	box-shadow: 0 0 6px #f8b9b7;
 }
-#report.active,#export.active {
+.tools #cur.active, .tools #last.active {
 	display: block;
 }
 .tools .todo-data {
 	border: 1px solid rgba(0, 0, 0, .2);
 	padding: 20px;
 }
-#report small {
+.tools .todo-data small {
 	margin-left: 10px;
 }
-#report dt {
+.tools .todo-data dt {
 	font-size:18px;
 }
-#report ol {
+.tools .todo-data ol {
 	margin-left: 50px;
 }
-#report ol li {
+.tools .todo-data ol li {
 	font-size:14px;
 	color: #404040;
 	line-height: 24px;
 }
-#report span.label {
+.tools .todo-data span.label {
 	cursor: default;
 }

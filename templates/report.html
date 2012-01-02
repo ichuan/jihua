@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block css %}
+<link href="{{ settings.MEDIA_URL }}css/jihua.min.css?1" rel="stylesheet">
+{% endblock %}
+
+{% block report-menu %}active{% endblock %}
+
+{% block js %}
+<script src="{{ settings.MEDIA_URL }}js/LAB.min.js"></script>
+<script>
+$LAB
+.script('{{ settings.MEDIA_URL }}js/jquery.min.js').wait()
+.script('{{ settings.MEDIA_URL }}js/bootstrap-dropdown.js')
+.script('{{ settings.MEDIA_URL }}js/bootstrap-tabs.js')
+.script('{{ settings.MEDIA_URL }}js/bootstrap-buttons.js').wait(function(){
+	$(function(){
+		var tagColorClass = function(tag){
+			var ret = 0;
+			for (var i = 0, j = tag.length; i < j; i++)
+				ret += tag.charCodeAt(i);
+			return 'cl' + (ret % 30);
+		}, htmlContent = function(text){
+			return text.replace(/&/g, '&amp;')
+					   .replace(/</g, '&lt;')
+					   .replace(/>/g, '&gt;')
+					   .replace(/(#|＃)([^\1]+?)\1/g, function(hash){
+				var t = hash.substr(1, hash.length - 2);
+				return '<span class="label ' + tagColorClass(t) + '">' + t + '</span>';
+			});
+		};
+		$('.todo-data li').each(function(){
+			var el = $(this), text = el.text();
+			el.html(htmlContent(text));
+		});
+	});
+})
+</script>
+{% endblock %}
+
+{% block container %}
+	<div class="container tools" id="main">
+		<div class="row">
+			<div class="span16">
+				<ul class="pills" data-pills="pills">
+					<li class="active"><a href="#cur">{% trans '本周' %}</a></li>
+					<li><a href="#last">{% trans '上周' %}</a></li>
+				</ul>
+				<div id="cur" class="todo-data hide active">
+					<div class="page-header">
+						<h1>{% trans '本周周报' %}<small>{{ cur.ranges }}{% trans '，完成率：' %}{{ cur.rate }}%</small></h1>
+					</div>
+					<div class="row">
+						<div class="span15">
+							<dl>
+								{% for i, j in cur.todos.items %}
+								<dt>{{ i }}</dt>
+								<dd>
+									<ol>
+										{% for k in j %}
+										<li>{{ k }}</li>
+										{% endfor %}
+									</ol>
+								</dd>
+								{% endfor %}
+							</dl>
+						</div>
+					</div>
+				</div>
+				<div id="last" class="todo-data hide">
+					<div class="page-header">
+						<h1>{% trans '上周周报' %}<small>{{ last.ranges }}{% trans '，完成率：' %}{{ last.rate }}%</small></h1>
+					</div>
+					<div class="row">
+						<div class="span15">
+							<dl>
+								{% for i, j in last.todos.items %}
+								<dt>{{ i }}</dt>
+								<dd>
+									<ol>
+										{% for k in j %}
+										<li>{{ k }}</li>
+										{% endfor %}
+									</ol>
+								</dd>
+								{% endfor %}
+							</dl>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

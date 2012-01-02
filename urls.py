@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     (r'^help/$', 'django.views.generic.simple.direct_to_template', {'template': 'help.html'}),
     (r'^changelog/$', 'django.views.generic.simple.direct_to_template', {'template': 'changelog.html'}),
     (r'^tools/$', 'jihua.views.tools'),
+    (r'^report/$', 'jihua.views.report'),
     (r'^change_passwd/$', 'django.contrib.auth.views.password_change', {
 		'template_name': 'change_passwd.html',
 		'post_change_redirect': '/',

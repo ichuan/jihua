@@ -24,6 +24,14 @@
 			page && (page = '!/' + page);
 			Backbone.history.navigate(page, true)
 		},
+		pad0 = function(num, len){
+			var a = '' + num;
+			if (a.length >= len)
+				return a;
+			for (var i = 0, j = len - a.length; i < j; i++)
+				a = '0' + a;
+			return a;
+		},
 		PAGESIZE = 100;
 
 	// parse string like: 2011-11-11 22:11:22
@@ -53,13 +61,13 @@
 				return '刚刚';
 		} else if (days >= 0 && days < 7) {
 			if (days == 0)
-				return '昨天 ' + d2.getHours() + ':' + d2.getMinutes();
+				return '昨天 ' + pad0(d2.getHours(), 2) + ':' + pad0(d2.getMinutes(), 2);
 			else if (days == 1)
-				return '前天 ' + d2.getHours() + ':' + d2.getMinutes();
+				return '前天 ' + pad0(d2.getHours(), 2) + ':' + pad0(d2.getMinutes(), 2);
 			else
 				return '' + (days + 1) + ' 天前';
 		} else{
-			return d2.getFullYear() + '/' + (d2.getMonth() + 1) + '/' + d2.getDate() + ' ' + d2.getHours() + ':' + d2.getMinutes() + ':' + d2.getSeconds();
+			return d2.getFullYear() + '/' + (d2.getMonth() + 1) + '/' + d2.getDate() + ' ' + pad0(d2.getHours(), 2) + ':' + pad0(d2.getMinutes(), 2) + ':' + pad0(d2.getSeconds(), 2);
 		}
 	};
 

@@ -6,6 +6,7 @@
 import re
 from django.http import HttpResponse, HttpRequest
 from django.contrib.auth import authenticate
+from django.views.decorators.csrf import csrf_view_exempt
 from todo.models import Todo, Tag, User
 from utils import json_encode, json_decode, now, date_range
 
@@ -60,7 +61,7 @@ def api(func):
 			return ret if raw else json_return(ret)
 		except:
 			return -1 if raw else json_return(status=500)
-	return inner
+	return csrf_view_exempt(inner)
 
 @api
 def test(method, get, post, user):

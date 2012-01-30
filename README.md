@@ -30,5 +30,11 @@
 
 目前有些非紧急的功能有待实现（时区设置，数据导出，etc），欢迎 fork 此项目，然后贡献代码。
 
+API 文档
+---------
+[API 文档1.0][3]
+
 [1]: https://jihua.in/
 [2]: https://jihua.in/help/
+[3]: https://github.com/ichuan/jihua/wiki/API%E6%96%87%E6%A1%A31.0
+

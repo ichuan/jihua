@@ -14,6 +14,8 @@
 		<![endif]-->
 		{% block js %}{% endblock %}
 		<script>
+			if (self != top)
+				top.location = self.location;
 			var _gaq = _gaq || [];
 			_gaq.push(['_setAccount', '{{ settings.GA_ID }}']);
 			_gaq.push(['_trackPageview']);

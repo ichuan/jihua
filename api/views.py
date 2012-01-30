@@ -5,6 +5,7 @@
 
 import re
 from django.http import HttpResponse, HttpRequest
+from django.contrib.auth import authenticate
 from todo.models import Todo, Tag, User
 from utils import json_encode, json_decode, now, date_range
 
@@ -27,7 +28,17 @@ def api(func):
 			get = req.GET
 			user = req.user
 
-			if not req.user.is_authenticated():
+			# api 的 basic 认证
+			if 'HTTP_AUTHORIZATION' in req.META and req.META['HTTP_AUTHORIZATION'].startswith('Basic '):
+				try:
+					username, password = req.META['HTTP_AUTHORIZATION'][6:].decode('base64').split(':', 1)
+				except:
+					return json_return(status=400)
+
+				user = authenticate(username=username, password=password)
+				if not user:
+					return json_return(status=401)
+			elif not req.user.is_authenticated():
 				return json_return(status=401)
 
 			if not method in ('GET', 'POST', 'PUT', 'DELETE'):
@@ -149,7 +160,7 @@ def single_activity(method, get, post, user, id):
 	assert method in ('PUT', 'DELETE')
 	todo = Todo.activities.get(pk=id, user=user)
 	if method == 'PUT':
-		_modify_todo(todo, post['content'].strip(), user, bool(post['done']))
+		_modify_todo(todo, post['content'].strip(), user, False)
 	elif method == 'DELETE':
 		_delete_todo(todo)
 

@@ -22,7 +22,7 @@
 		},
 		gotoPage = function(page){
 			page && (page = '!/' + page);
-			Backbone.history.navigate(page, true)
+			Backbone.history.navigate(page, true);
 		},
 		pad0 = function(num, len){
 			var a = '' + num;

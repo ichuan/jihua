@@ -5,8 +5,8 @@
 	var API_ROOT = '/api',
 		E = {},
 		tpls = {
-			activity: '<div class="op"><div class="arrow"></div><div title="编辑" class="edit"></div><div title="删除" class="del"></div><div title="放入今日计划" class="a2t"></div><div title="添加于 <%= created %>" class="timestamp" data-timestamp="<%= timestamp %>"></div></div><div class="activity"><%= content %></div>',
-			todo: '<div class="op"><div class="arrow"></div><div title="编辑" class="edit"></div><div title="删除" class="del"></div><div title="放回活动清单" class="t2a"></div><div title="添加于 <%= created %>" class="timestamp" data-timestamp="<%= timestamp %>"></div></div><div class="checkbox">&#x2713;</div><div class="todo"><%= content %></div>',
+			activity: '<div class="op"><div class="edit">编辑</div><div class="del">删除</div><div title="放入今日计划" class="a2t">转计划</div><div title="添加于 <%= created %>" class="timestamp" data-timestamp="<%= timestamp %>"><%= created_short %></div></div><div class="activity"><%= content %></div>',
+			todo: '<div class="op"><div class="edit">编辑</div><div class="del">删除</div><div title="放回活动清单" class="t2a">转活动</div><div title="添加于 <%= created %>" class="timestamp" data-timestamp="<%= timestamp %>"><%= created_short %></div></div><div class="checkbox">&#x2713;</div><div class="todo"><%= content %></div>',
 			today: '<div class="clearfix"><input class="span-new" id="new-todo" placeholder="输入计划，回车保存"><button id="submit-todo" data-loading-text="添加中..." class="btn primary">添加</button></div><ul class="todos"></ul>',
 			activities: '<div class="clearfix"><input class="span-new" id="new-activity" placeholder="输入活动，回车保存"><button id="submit-activity" data-loading-text="添加中..." class="btn primary">添加</button></div><ul class="activities"></ul>',
 			tab_item: '<li><a class="plus" href="#!/<%- name %>">搜索结果</a></li>',
@@ -48,26 +48,34 @@
 		return new Date(year, month, day, hour, minute, second);
 	};
 
+	// 返回2元素数组：[长描述，短描述]
 	window.humanizeDate = function(d2){
 		var d1 = now(), d2 = Date.fromString(d2), sep = (d1 - d2) / 1000, tts = todayts(), days = parseInt((tts - d2) / 86400000, 10);
 		if (d2 >= tts){
-			if (sep > 3600)
-				return '' + parseInt(sep / 3600, 10) + ' 小时前';
-			else if (sep > 1800)
-				return '半小时前';
-			else if (sep > 60)
-				return '' + parseInt(sep / 60, 10) + ' 分钟前';
-			else
-				return '刚刚';
+			if (sep > 3600){
+				var num = parseInt(sep / 3600, 10);
+				return ['' + num + ' 小时前', '' + num + '时'];
+			} else if (sep > 1800) {
+				return ['半小时前', '半时'];
+			} else if (sep > 60) {
+				var num = parseInt(sep / 60, 10);
+				return ['' + num + ' 分钟前', '' + num + '分'];
+			} else
+				return ['刚刚', '刚刚'];
 		} else if (days >= 0 && days < 7) {
 			if (days == 0)
 				return '昨天 ' + pad0(d2.getHours(), 2) + ':' + pad0(d2.getMinutes(), 2);
 			else if (days == 1)
 				return '前天 ' + pad0(d2.getHours(), 2) + ':' + pad0(d2.getMinutes(), 2);
-			else
-				return '' + (days + 1) + ' 天前';
-		} else{
-			return d2.getFullYear() + '/' + (d2.getMonth() + 1) + '/' + d2.getDate() + ' ' + pad0(d2.getHours(), 2) + ':' + pad0(d2.getMinutes(), 2) + ':' + pad0(d2.getSeconds(), 2);
+			else {
+				var num = days + 1;
+				return ['' + num + ' 天前', '' + num + '天'];
+			}
+		} else {
+			var ret = d2.getFullYear() + '/' + (d2.getMonth() + 1) + '/' + d2.getDate() + ' ' + pad0(d2.getHours(), 2) + ':' + pad0(d2.getMinutes(), 2) + ':' + pad0(d2.getSeconds(), 2);
+			if (d1.getFullYear() == d2.getFullYear())
+				return [ret, '' + (d2.getMonth() + 1) + '月' + d2.getDate() + '日'];
+			return [ret, d2.getFullYear() + '/' + (d2.getMonth() + 1) + '/' + d2.getDate()];
 		}
 	};
 
@@ -134,7 +142,6 @@
 		template: _.template(tpls.activity),
 		events: {
 			'hover': 'hover',
-			'hover .op': 'hoverOp',
 			'click .edit': 'edit',
 			'click .del': 'del',
 			'click .a2t': 'convert',
@@ -151,10 +158,6 @@
 			var el = $(this.el), func = event.type == 'mouseenter' ? 'addClass' : 'removeClass';
 			el[func]('hover');
 			$('.selected').removeClass('selected');
-		},
-		hoverOp: function(event){
-			var el = $(this.el).find('.op'), func = event.type == 'mouseenter' ? 'addClass' : 'removeClass';
-			el[func]('hover');
 		},
 		edit: function(){
 			var model = this.model, popup = new EditModalView;
@@ -217,11 +220,13 @@
 			});
 		},
 		render: function(){
+			var dates = humanizeDate(this.model.get('created'));
 			$(this.el).html(this.template({
-				created: humanizeDate(this.model.get('created')),
+				created: dates[0],
+				created_short: dates[1],
 				timestamp: this.model.get('created'),
 				content: this.htmlContent()
-			})).find('.op [title]').twipsy({animate: false});
+			}));
 			return this;
 		}
 	});
@@ -230,7 +235,6 @@
 		template: _.template(tpls.todo),
 		events: {
 			'hover': 'hover',
-			'hover .op': 'hoverOp',
 			'click .edit': 'edit',
 			'click .del': 'del',
 			'click .t2a': 'convert',
@@ -250,12 +254,14 @@
 			});
 		},
 		render: function(){
-			var el = $(this.el)[this.model.get('done') ? 'addClass' : 'removeClass']('done');
+			var el = $(this.el)[this.model.get('done') ? 'addClass' : 'removeClass']('done'),
+				dates = humanizeDate(this.model.get('created'));
 			el.html(this.template({
-				created: humanizeDate(this.model.get('created')),
+				created: dates[0],
+				created_short: dates[1],
 				timestamp: this.model.get('created'),
 				content: this.htmlContent()
-			})).find('.op [title]').twipsy({animate: false});
+			}));
 			return this;
 		}
 	});
@@ -768,8 +774,10 @@
 			setInterval(function(){
 				$('.timestamp').each(function(){
 					var el = $(this), ts = el.data('timestamp');
-					if (ts)
-						el.attr('data-original-title', '添加于 ' + humanizeDate(ts));
+					if (ts) {
+						var dates = humanizeDate(ts);
+						el.attr('data-original-title', '添加于 ' + dates[0]).text(dates[1]);
+					}
 				});
 			}, 60000);
 		},

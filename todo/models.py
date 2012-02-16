@@ -76,5 +76,5 @@ class Todo(models.Model):
 		}
 
 	class Meta:
-		ordering = ['-id']
+		ordering = ['-created']
 		verbose_name_plural = verbose_name = u'计划'

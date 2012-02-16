@@ -63,10 +63,11 @@
 			} else
 				return ['刚刚', '刚刚'];
 		} else if (days >= 0 && days < 7) {
+			var hm = pad0(d2.getHours(), 2) + ':' + pad0(d2.getMinutes(), 2);
 			if (days == 0)
-				return '昨天 ' + pad0(d2.getHours(), 2) + ':' + pad0(d2.getMinutes(), 2);
+				return ['昨天 ' + hm, '昨天 ' + hm]
 			else if (days == 1)
-				return '前天 ' + pad0(d2.getHours(), 2) + ':' + pad0(d2.getMinutes(), 2);
+				return ['前天 ' + hm, '前天 ' + hm]
 			else {
 				var num = days + 1;
 				return ['' + num + ' 天前', '' + num + '天'];
@@ -118,7 +119,7 @@
 		model: Activity,
 		url: API_ROOT + '/activities/',
 		comparator: function(activity){
-			return activity.get('id');
+			return -parseInt(activity.get('id'), 10);
 		}
 	});
 

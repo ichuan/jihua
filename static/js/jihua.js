@@ -777,7 +777,7 @@
 					var el = $(this), ts = el.data('timestamp');
 					if (ts) {
 						var dates = humanizeDate(ts);
-						el.attr('data-original-title', '添加于 ' + dates[0]).text(dates[1]);
+						el.attr('title', '添加于 ' + dates[0]).text(dates[1]);
 					}
 				});
 			}, 60000);

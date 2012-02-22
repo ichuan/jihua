@@ -18,7 +18,7 @@
 安装步骤
 --------
 
-1. 创建数据库，例如 mysql 数据库：`$ mysql -u root -proot -e 'create database jihua'`
+1. 创建数据库，例如 mysql 数据库：`$ mysql -u root -proot -e 'create database jihua charset utf8 collate utf8_general_ci'`。注意数据库要使用`utf8`编码。
 2. 拷贝 `local_settings.default.py` 为 `local_settings.py`，修改里面的数据库配置。还有其他配置可以改
 3. 执行 `python manage.py syncdb` 同步数据库
 4. 执行 `python manage.py runserver 0.0.0.0:8000` 启动临时服务器

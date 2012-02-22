@@ -12,7 +12,7 @@
 
 1. recaptcha-client: `http://pypi.python.org/pypi/recaptcha-client`
 2. django >= 1.3
-3. python2.6 以下需要 ordereddict: `http://pypi.python.org/pypi/ordereddict`
+3. python2.7 以下需要 ordereddict: `http://pypi.python.org/pypi/ordereddict`
 4. 如果需要压缩 js 和 css，需要 java 环境和 yui 压缩器：`http://yui.zenfs.com/releases/yuicompressor/yuicompressor-2.4.7.zip` 详见 `bin/min.sh`
 
 安装步骤

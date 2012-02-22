@@ -88,12 +88,14 @@ $(function(){
 							{% endif %}
 						</div>
 					</div>
+					{% if settings.CAPTCHA_PUBLIC_KEY and settings.CAPTCHA_PRIVATE_KEY %}
 					<div class="clearfix">
 						<label for="">{% trans '验证码' %}</label>
 						<div class="input">
 							<script src="https://www.google.com/recaptcha/api/challenge?k={{ settings.CAPTCHA_PUBLIC_KEY }}" /></script>
 						</div>
 					</div>
+					{% endif %}
 					<div class="actions">
 						<input type="submit" class="btn primary" value="{% trans '注册' %}" />
 					</div>

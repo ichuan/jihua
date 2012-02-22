@@ -11,7 +11,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.html import escapejs
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
-from recaptcha.client import captcha
 from utils import *
 from forms import SignUpForm
 import api.views as api
@@ -45,16 +44,19 @@ def signup(req):
 		form = SignUpForm(req.POST)
 		if form.is_valid():
 			# check reCAPTCHA
-			challenge, response = req.POST.get('recaptcha_challenge_field', ''), req.POST.get('recaptcha_response_field', '')
-			if challenge and response:
-				ret = captcha.submit(challenge, response, settings.CAPTCHA_PRIVATE_KEY, req.META['REMOTE_ADDR'])
-				if ret.is_valid:
-					user = form.save()
-					# hack for not using authenticate()
-					user.backend = 'django.contrib.auth.backends.ModelBackend'
-					login(req, user)
-					return HttpResponseRedirect('/')
-			captcha_ok = False
+			if settings.CAPTCHA_PUBLIC_KEY and settings.CAPTCHA_PRIVATE_KEY:
+				captcha_ok = False
+				challenge, response = req.POST.get('recaptcha_challenge_field', ''), req.POST.get('recaptcha_response_field', '')
+				if challenge and response:
+					from recaptcha.client import captcha
+					ret = captcha.submit(challenge, response, settings.CAPTCHA_PRIVATE_KEY, req.META['REMOTE_ADDR'])
+					captcha_ok = ret.is_valid
+			if captcha_ok:
+				user = form.save()
+				# hack for not using authenticate()
+				user.backend = 'django.contrib.auth.backends.ModelBackend'
+				login(req, user)
+				return HttpResponseRedirect('/')
 	else:
 		form = SignUpForm()
 	return render_to_response('signup.html', {

@@ -142,10 +142,10 @@ LOGIN_REDIRECT_URL = '/'
 GA_ID = 'UA-0-1'
 
 # reCAPTCHA
-# goto http://www.google.com/recaptcha/whyrecaptcha and apply for a key
+# 去 http://www.google.com/recaptcha/whyrecaptcha 申请 KEY
+# 如果需要关闭验证码功能，请将下面两个变量置空
 CAPTCHA_PUBLIC_KEY = 'CAPTCHA_PUBLIC_KEY'
 CAPTCHA_PRIVATE_KEY = 'CAPTCHA_PRIVATE_KEY'
-
 
 # overwrite configs
 try:

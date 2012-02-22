@@ -5,8 +5,8 @@
 	var API_ROOT = '/api',
 		E = {},
 		tpls = {
-			activity: '<div class="op"><div class="edit">编辑</div><div class="del">删除</div><div title="放入今日计划" class="a2t">转计划</div><div title="添加于 <%= created %>" class="timestamp" data-timestamp="<%= timestamp %>"><%= created_short %></div></div><div class="activity"><%= content %></div>',
-			todo: '<div class="op"><div class="edit">编辑</div><div class="del">删除</div><div title="放回活动清单" class="t2a">转活动</div><div title="添加于 <%= created %>" class="timestamp" data-timestamp="<%= timestamp %>"><%= created_short %></div></div><div class="checkbox">&#x2713;</div><div class="todo"><%= content %></div>',
+			activity: '<div class="op"><div class="arrow">›</div><div title="编辑" class="edit">编辑</div><div title="删除" class="del">删除</div><div title="放入今日计划" class="a2t">转计划</div><div title="添加于 <%= created %>" class="timestamp" data-timestamp="<%= timestamp %>">C</div></div><div class="activity"><%= content %></div>',
+			todo: '<div class="op"><div class="arrow">›</div><div title="编辑" class="edit">编辑</div><div title="删除" class="del">删除</div><div title="放回活动清单" class="t2a">转活动</div><div title="添加于 <%= created %>" class="timestamp" data-timestamp="<%= timestamp %>">C</div></div><div class="checkbox">&#x2713;</div><div class="todo"><%= content %></div>',
 			today: '<div class="clearfix"><input class="span-new" id="new-todo" placeholder="输入计划，回车保存"><button id="submit-todo" data-loading-text="添加中..." class="btn primary">添加</button></div><ul class="todos"></ul>',
 			activities: '<div class="clearfix"><input class="span-new" id="new-activity" placeholder="输入活动，回车保存"><button id="submit-activity" data-loading-text="添加中..." class="btn primary">添加</button></div><ul class="activities"></ul>',
 			tab_item: '<li><a class="plus" href="#!/<%- name %>">搜索结果</a></li>',
@@ -143,6 +143,7 @@
 		template: _.template(tpls.activity),
 		events: {
 			'hover': 'hover',
+			'hover .op': 'hoverOp',
 			'click .edit': 'edit',
 			'click .del': 'del',
 			'click .a2t': 'convert',
@@ -159,6 +160,10 @@
 			var el = $(this.el), func = event.type == 'mouseenter' ? 'addClass' : 'removeClass';
 			el[func]('hover');
 			$('.selected').removeClass('selected');
+		},
+		hoverOp: function(event){
+			var el = $(this.el).find('.op'), func = event.type == 'mouseenter' ? 'addClass' : 'removeClass';
+			el[func]('hover');
 		},
 		edit: function(){
 			var model = this.model, popup = new EditModalView;
@@ -224,7 +229,6 @@
 			var dates = humanizeDate(this.model.get('created'));
 			$(this.el).html(this.template({
 				created: dates[0],
-				created_short: dates[1],
 				timestamp: this.model.get('created'),
 				content: this.htmlContent()
 			}));
@@ -236,6 +240,7 @@
 		template: _.template(tpls.todo),
 		events: {
 			'hover': 'hover',
+			'hover .op': 'hoverOp',
 			'click .edit': 'edit',
 			'click .del': 'del',
 			'click .t2a': 'convert',
@@ -259,7 +264,6 @@
 				dates = humanizeDate(this.model.get('created'));
 			el.html(this.template({
 				created: dates[0],
-				created_short: dates[1],
 				timestamp: this.model.get('created'),
 				content: this.htmlContent()
 			}));
@@ -777,7 +781,7 @@
 					var el = $(this), ts = el.data('timestamp');
 					if (ts) {
 						var dates = humanizeDate(ts);
-						el.attr('title', '添加于 ' + dates[0]).text(dates[1]);
+						el.attr('title', '添加于 ' + dates[0]);
 					}
 				});
 			}, 60000);

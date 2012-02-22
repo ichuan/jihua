@@ -111,6 +111,7 @@ input.span-new {
 	color:#444;
 	border:1px solid transparent;
 	border-bottom:1px dashed #eee;
+	overflow: hidden;
 }
 .activities > li:first-child,.todos > li:first-child {
 	border-top:1px dashed #eee;
@@ -187,26 +188,37 @@ li.done .checkbox {
 	text-indent:0;
 }
 .op {
-	overflow: hidden;
 	padding: 6px 2px 6px 40px;
 	background: url('../img/op-bg.png') 0 center no-repeat;
 	position: absolute;
-	right: 0;
+	right: -188px;
 	top: 0;
 	color: #099;
 	opacity: 0;
-	-webkit-transition: opacity .2s ease-in-out;
-	-moz-transition: opacity .2s ease-in-out;
-	-ms-transition: opacity .2s ease-in-out;
-	-o-transition: opacity .2s ease-in-out;
-	transition: opacity .2s ease-in-out;
+	-webkit-transition: right .2s;
+	-moz-transition: right .2s;
+	-ms-transition: right .2s;
+	-o-transition: right .2s;
+	transition: right .2s;
+}
+.hover.op {
+	right: 0;
 }
 .op > div {
 	float: left;
 	margin-left: 8px;
 }
-.edit, .del, .t2a, .a2t{
-	background: url('../img/op2.png') 0 0 no-repeat;
+.arrow {
+	background: url('../img/op2.png?1') 0 -64px no-repeat;
+	width: 8px;
+	text-indent: -9999px;
+	opacity: 1;
+}
+.hover.op .arrow {
+	opacity: .3;
+}
+.edit, .del, .t2a, .a2t, .timestamp{
+	background: url('../img/op2.png?1') 0 0 no-repeat;
 	padding-left: 16px;
 	cursor: pointer;
 }
@@ -223,8 +235,12 @@ li.done .checkbox {
 	background-position:0 -46px;
 }
 .timestamp{
-	margin-left: 12px!important;
 	padding-left: 0;
+	margin-left: 14px!important;
+	cursor: default;
+	width: 12px;
+	text-indent: -9999px;
+	background-position:0 -80px;
 }
 .hover .op {
 	opacity: 1;

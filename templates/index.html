@@ -2,7 +2,7 @@
 {% load i18n %}
 
 {% block css %}
-<link href="{{ settings.MEDIA_URL }}css/jihua.min.css?20120216" rel="stylesheet">
+<link href="{{ settings.MEDIA_URL }}css/jihua.min.css?20120222" rel="stylesheet">
 <link href="{{ settings.MEDIA_URL }}css/jquery-ui.min.css" rel="stylesheet">
 {% endblock %}
 
@@ -35,7 +35,7 @@ $LAB
 .script('{{ settings.MEDIA_URL }}js/jquery-ui.min.js')
 .script('{{ settings.MEDIA_URL }}js/utils.js')
 .script('{{ settings.MEDIA_URL }}js/bootstrap-modal.js').wait()
-.script('{{ settings.MEDIA_URL }}js/jihua.min.js?20120217').wait(function(){
+.script('{{ settings.MEDIA_URL }}js/jihua.min.js?20120222').wait(function(){
 	window.initTodos = JSON.parse(atob('{{ todos|safe }}'));
 	window.initActivities = JSON.parse(atob('{{ activities|safe }}'));
 	$(function(){
